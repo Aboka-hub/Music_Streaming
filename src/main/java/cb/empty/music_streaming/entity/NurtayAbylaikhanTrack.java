@@ -25,7 +25,7 @@ public class NurtayAbylaikhanTrack {
     private String title;
     @Column(nullable = false)
     private Integer duration;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String filePath;
 
     @CreationTimestamp
