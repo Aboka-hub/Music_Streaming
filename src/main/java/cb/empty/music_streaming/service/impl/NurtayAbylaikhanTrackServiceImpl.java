@@ -26,8 +26,7 @@ public class NurtayAbylaikhanTrackServiceImpl implements NurtayAbylaikhanTrackSe
 
     @Override
     public NurtayAbylaikhanTrackResponse create(NurtayAbylaikhanTrackRequest request) {
-        NurtayAbylaikhanAlbum album = albumRepository.findById(request.getAlbumId())
-                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Album not found"));
+        NurtayAbylaikhanAlbum album = albumRepository.findById(request.getAlbumId()).orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Album not found"));
         NurtayAbylaikhanTrack track = trackMapper.toEntity(request);
         track.setAlbum(album);
         return trackMapper.toResponse(trackRepository.save(track));
@@ -35,23 +34,18 @@ public class NurtayAbylaikhanTrackServiceImpl implements NurtayAbylaikhanTrackSe
 
     @Override
     public NurtayAbylaikhanTrackResponse getById(Long id) {
-        NurtayAbylaikhanTrack track = trackRepository.findById(id)
-                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Track not found"));
+        NurtayAbylaikhanTrack track = trackRepository.findById(id).orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Track not found"));
         return trackMapper.toResponse(track);
     }
 
     @Override
     public List<NurtayAbylaikhanTrackResponse> getAll() {
-        return trackRepository.findAll()
-                .stream()
-                .map(trackMapper::toResponse)
-                .toList();
+        return trackRepository.findAll().stream().map(trackMapper::toResponse).toList();
     }
 
     @Override
     public NurtayAbylaikhanTrackResponse update(Long id, NurtayAbylaikhanTrackRequest request) {
-        NurtayAbylaikhanTrack track = trackRepository.findById(id)
-                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Track not found"));
+        NurtayAbylaikhanTrack track = trackRepository.findById(id).orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Track not found"));
         track.setTitle(request.getTitle());
         track.setDuration(request.getDuration());
         return trackMapper.toResponse(trackRepository.save(track));

@@ -31,9 +31,7 @@ public class NurtayAbylaikhanUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<NurtayAbylaikhanUserResponse> update(
-            @PathVariable Long id,
-            @Valid @RequestBody NurtayAbylaikhanUserRequest request) {
+    public ResponseEntity<NurtayAbylaikhanUserResponse> update(@PathVariable Long id, @Valid @RequestBody NurtayAbylaikhanUserRequest request) {
         return ResponseEntity.ok(userService.update(id, request));
     }
 
@@ -44,10 +42,7 @@ public class NurtayAbylaikhanUserController {
     }
 
     @GetMapping("/page/get")
-    public ResponseEntity<Page<NurtayAbylaikhanUserResponse>> getByUsernameContainingIgnoreCase(
-            @RequestParam(required = false) String username,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<NurtayAbylaikhanUserResponse>> getByUsernameContainingIgnoreCase(@RequestParam(required = false) String username, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(userService.getByUsernameContainingIgnoreCase(username, pageable));
     }

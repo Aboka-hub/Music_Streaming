@@ -9,9 +9,14 @@ import java.util.List;
 
 public interface NurtayAbylaikhanTrackService {
     NurtayAbylaikhanTrackResponse create(NurtayAbylaikhanTrackRequest request);
+
     NurtayAbylaikhanTrackResponse getById(Long id);
+
     List<NurtayAbylaikhanTrackResponse> getAll();
+
     NurtayAbylaikhanTrackResponse update(Long id, NurtayAbylaikhanTrackRequest request);
+
     Page<NurtayAbylaikhanTrackResponse> search(String title, Long albumId, Pageable pageable);
+
     void delete(Long id);
 }
