@@ -5,6 +5,10 @@ import cb.empty.music_streaming.dto.response.NurtayAbylaikhanTrackResponse;
 import cb.empty.music_streaming.service.NurtayAbylaikhanTrackService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +49,23 @@ public class NurtayAbylaikhanTrackController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         trackService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<NurtayAbylaikhanTrackResponse>> search(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Long albumId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        Pageable pageable = PageRequest.of(
+                page, size,
+                sortDir.equalsIgnoreCase("asc")
+                        ? Sort.by(sortBy).ascending()
+                        : Sort.by(sortBy).descending());
+
+        return ResponseEntity.ok(trackService.search(title, albumId, pageable));
     }
 }

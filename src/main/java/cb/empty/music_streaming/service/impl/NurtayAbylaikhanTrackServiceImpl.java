@@ -10,6 +10,8 @@ import cb.empty.music_streaming.repository.NurtayAbylaikhanAlbumRepository;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanTrackRepository;
 import cb.empty.music_streaming.service.NurtayAbylaikhanTrackService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,5 +60,20 @@ public class NurtayAbylaikhanTrackServiceImpl implements NurtayAbylaikhanTrackSe
     @Override
     public void delete(Long id) {
         trackRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<NurtayAbylaikhanTrackResponse> search(String title, Long albumId, Pageable pageable) {
+        Page<NurtayAbylaikhanTrack> tracks;
+
+        if (title != null && !title.isEmpty()) {
+            tracks = trackRepository.findByTitleContainingIgnoreCase(title, pageable);
+        } else if (albumId != null) {
+            tracks = trackRepository.findByAlbumId(albumId, pageable);
+        } else {
+            tracks = trackRepository.findAll(pageable);
+        }
+
+        return tracks.map(trackMapper::toResponse);
     }
 }
