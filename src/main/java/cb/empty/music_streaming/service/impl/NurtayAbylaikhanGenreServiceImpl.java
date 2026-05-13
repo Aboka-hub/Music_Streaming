@@ -3,6 +3,7 @@ package cb.empty.music_streaming.service.impl;
 import cb.empty.music_streaming.dto.request.NurtayAbylaikhanGenreRequest;
 import cb.empty.music_streaming.dto.response.NurtayAbylaikhanGenreResponse;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanGenre;
+import cb.empty.music_streaming.exception.NurtayAbylaikhanNotFoundException;
 import cb.empty.music_streaming.mapper.NurtayAbylaikhanGenreMapper;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanGenreRepository;
 import cb.empty.music_streaming.service.NurtayAbylaikhanGenreService;
@@ -27,7 +28,7 @@ public class NurtayAbylaikhanGenreServiceImpl implements NurtayAbylaikhanGenreSe
     @Override
     public NurtayAbylaikhanGenreResponse getById(Long id) {
         NurtayAbylaikhanGenre genre = genreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Genre not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Genre not found"));
         return genreMapper.toResponse(genre);
     }
 
@@ -42,7 +43,7 @@ public class NurtayAbylaikhanGenreServiceImpl implements NurtayAbylaikhanGenreSe
     @Override
     public NurtayAbylaikhanGenreResponse update(Long id, NurtayAbylaikhanGenreRequest request) {
         NurtayAbylaikhanGenre genre = genreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Genre not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Genre not found"));
         genre.setName(request.getName());
         return genreMapper.toResponse(genreRepository.save(genre));
     }

@@ -5,6 +5,7 @@ import cb.empty.music_streaming.dto.response.NurtayAbylaikhanPlaylistResponse;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanPlaylist;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanTrack;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanUser;
+import cb.empty.music_streaming.exception.NurtayAbylaikhanNotFoundException;
 import cb.empty.music_streaming.mapper.NurtayAbylaikhanPlaylistMapper;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanPlaylistRepository;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanTrackRepository;
@@ -27,7 +28,7 @@ public class NurtayAbylaikhanPlaylistServiceImpl implements NurtayAbylaikhanPlay
     @Override
     public NurtayAbylaikhanPlaylistResponse create(NurtayAbylaikhanPlaylistRequest request) {
         NurtayAbylaikhanUser user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("User not found"));
         NurtayAbylaikhanPlaylist playlist = playlistMapper.toEntity(request);
         playlist.setUser(user);
         return playlistMapper.toResponse(playlistRepository.save(playlist));
@@ -36,7 +37,7 @@ public class NurtayAbylaikhanPlaylistServiceImpl implements NurtayAbylaikhanPlay
     @Override
     public NurtayAbylaikhanPlaylistResponse getById(Long id) {
         NurtayAbylaikhanPlaylist playlist = playlistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Playlist not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Playlist not found"));
         return playlistMapper.toResponse(playlist);
     }
 
@@ -51,7 +52,7 @@ public class NurtayAbylaikhanPlaylistServiceImpl implements NurtayAbylaikhanPlay
     @Override
     public NurtayAbylaikhanPlaylistResponse update(Long id, NurtayAbylaikhanPlaylistRequest request) {
         NurtayAbylaikhanPlaylist playlist = playlistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Playlist not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Playlist not found"));
         playlist.setName(request.getName());
         return playlistMapper.toResponse(playlistRepository.save(playlist));
     }
@@ -64,9 +65,9 @@ public class NurtayAbylaikhanPlaylistServiceImpl implements NurtayAbylaikhanPlay
     @Override
     public NurtayAbylaikhanPlaylistResponse addTrack(Long playlistId, Long trackId) {
         NurtayAbylaikhanPlaylist playlist = playlistRepository.findById(playlistId)
-                .orElseThrow(() -> new RuntimeException("Playlist not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Playlist not found"));
         NurtayAbylaikhanTrack track = trackRepository.findById(trackId)
-                .orElseThrow(() -> new RuntimeException("Track not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Track not found"));
         playlist.getTracks().add(track);
         return playlistMapper.toResponse(playlistRepository.save(playlist));
     }
@@ -74,7 +75,7 @@ public class NurtayAbylaikhanPlaylistServiceImpl implements NurtayAbylaikhanPlay
     @Override
     public NurtayAbylaikhanPlaylistResponse removeTrack(Long playlistId, Long trackId) {
         NurtayAbylaikhanPlaylist playlist = playlistRepository.findById(playlistId)
-                .orElseThrow(() -> new RuntimeException("Playlist not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Playlist not found"));
         playlist.getTracks().removeIf(track -> track.getId().equals(trackId));
         return playlistMapper.toResponse(playlistRepository.save(playlist));
     }

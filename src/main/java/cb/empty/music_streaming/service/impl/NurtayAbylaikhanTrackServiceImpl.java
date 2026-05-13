@@ -4,6 +4,7 @@ import cb.empty.music_streaming.dto.request.NurtayAbylaikhanTrackRequest;
 import cb.empty.music_streaming.dto.response.NurtayAbylaikhanTrackResponse;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanAlbum;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanTrack;
+import cb.empty.music_streaming.exception.NurtayAbylaikhanNotFoundException;
 import cb.empty.music_streaming.mapper.NurtayAbylaikhanTrackMapper;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanAlbumRepository;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanTrackRepository;
@@ -24,7 +25,7 @@ public class NurtayAbylaikhanTrackServiceImpl implements NurtayAbylaikhanTrackSe
     @Override
     public NurtayAbylaikhanTrackResponse create(NurtayAbylaikhanTrackRequest request) {
         NurtayAbylaikhanAlbum album = albumRepository.findById(request.getAlbumId())
-                .orElseThrow(() -> new RuntimeException("Album not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Album not found"));
         NurtayAbylaikhanTrack track = trackMapper.toEntity(request);
         track.setAlbum(album);
         return trackMapper.toResponse(trackRepository.save(track));
@@ -33,7 +34,7 @@ public class NurtayAbylaikhanTrackServiceImpl implements NurtayAbylaikhanTrackSe
     @Override
     public NurtayAbylaikhanTrackResponse getById(Long id) {
         NurtayAbylaikhanTrack track = trackRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Track not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Track not found"));
         return trackMapper.toResponse(track);
     }
 
@@ -48,7 +49,7 @@ public class NurtayAbylaikhanTrackServiceImpl implements NurtayAbylaikhanTrackSe
     @Override
     public NurtayAbylaikhanTrackResponse update(Long id, NurtayAbylaikhanTrackRequest request) {
         NurtayAbylaikhanTrack track = trackRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Track not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Track not found"));
         track.setTitle(request.getTitle());
         track.setDuration(request.getDuration());
         return trackMapper.toResponse(trackRepository.save(track));

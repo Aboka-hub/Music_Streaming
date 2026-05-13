@@ -4,6 +4,7 @@ import cb.empty.music_streaming.dto.request.NurtayAbylaikhanArtistRequest;
 import cb.empty.music_streaming.dto.response.NurtayAbylaikhanArtistResponse;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanArtist;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanUser;
+import cb.empty.music_streaming.exception.NurtayAbylaikhanNotFoundException;
 import cb.empty.music_streaming.mapper.NurtayAbylaikhanArtistMapper;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanArtistRepository;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanUserRepository;
@@ -24,7 +25,7 @@ public class NurtayAbylaikhanArtistServiceImpl implements NurtayAbylaikhanArtist
     @Override
     public NurtayAbylaikhanArtistResponse create(NurtayAbylaikhanArtistRequest request) {
         NurtayAbylaikhanUser user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("User not found"));
         NurtayAbylaikhanArtist artist = artistMapper.toEntity(request);
         artist.setUser(user);
         return artistMapper.toResponse(artistRepository.save(artist));
@@ -33,7 +34,7 @@ public class NurtayAbylaikhanArtistServiceImpl implements NurtayAbylaikhanArtist
     @Override
     public NurtayAbylaikhanArtistResponse getById(Long id) {
         NurtayAbylaikhanArtist artist = artistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Artist not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Artist not found"));
         return artistMapper.toResponse(artist);
     }
 
@@ -48,7 +49,7 @@ public class NurtayAbylaikhanArtistServiceImpl implements NurtayAbylaikhanArtist
     @Override
     public NurtayAbylaikhanArtistResponse update(Long id, NurtayAbylaikhanArtistRequest request) {
         NurtayAbylaikhanArtist artist = artistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Artist not found"));
+                .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Artist not found"));
         artist.setStageName(request.getStageName());
         artist.setBio(request.getBio());
         return artistMapper.toResponse(artistRepository.save(artist));

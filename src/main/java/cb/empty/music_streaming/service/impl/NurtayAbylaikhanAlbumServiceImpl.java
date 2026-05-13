@@ -5,6 +5,7 @@ import cb.empty.music_streaming.dto.response.NurtayAbylaikhanAlbumResponse;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanAlbum;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanArtist;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanGenre;
+import cb.empty.music_streaming.exception.NurtayAbylaikhanNotFoundException;
 import cb.empty.music_streaming.mapper.NurtayAbylaikhanAlbumMapper;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanAlbumRepository;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanArtistRepository;
@@ -26,8 +27,8 @@ public class NurtayAbylaikhanAlbumServiceImpl implements NurtayAbylaikhanAlbumSe
 
     @Override
     public NurtayAbylaikhanAlbumResponse create(NurtayAbylaikhanAlbumRequest request) {
-        NurtayAbylaikhanArtist artist = artistRepository.findById(request.getArtistId()).orElseThrow(() -> new RuntimeException("Artist not found"));
-        NurtayAbylaikhanGenre genre = genreRepository.findById(request.getGenreId()).orElseThrow(() -> new RuntimeException("Genre not found"));
+        NurtayAbylaikhanArtist artist = artistRepository.findById(request.getArtistId()).orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Artist not found"));
+        NurtayAbylaikhanGenre genre = genreRepository.findById(request.getGenreId()).orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Genre not found"));
         NurtayAbylaikhanAlbum album = albumMapper.toEntity(request);
         album.setArtist(artist);
         album.setGenre(genre);
@@ -36,7 +37,7 @@ public class NurtayAbylaikhanAlbumServiceImpl implements NurtayAbylaikhanAlbumSe
 
     @Override
     public NurtayAbylaikhanAlbumResponse getById(Long id) {
-        NurtayAbylaikhanAlbum album = albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
+        NurtayAbylaikhanAlbum album = albumRepository.findById(id).orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Album not found"));
         return albumMapper.toResponse(album);
     }
 
@@ -47,7 +48,7 @@ public class NurtayAbylaikhanAlbumServiceImpl implements NurtayAbylaikhanAlbumSe
 
     @Override
     public NurtayAbylaikhanAlbumResponse update(Long id, NurtayAbylaikhanAlbumRequest request) {
-        NurtayAbylaikhanAlbum album = albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
+        NurtayAbylaikhanAlbum album = albumRepository.findById(id).orElseThrow(() -> new NurtayAbylaikhanNotFoundException("Album not found"));
         album.setTitle(request.getTitle());
         album.setReleaseDate(request.getReleaseDate());
         return albumMapper.toResponse(albumRepository.save(album));
