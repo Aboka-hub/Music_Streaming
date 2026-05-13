@@ -3,6 +3,7 @@ package cb.empty.music_streaming.service.impl;
 import cb.empty.music_streaming.entity.NurtayAbylaikhanTrack;
 import cb.empty.music_streaming.exception.NurtayAbylaikhanNotFoundException;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanTrackRepository;
+import cb.empty.music_streaming.service.NurtayAbylaikhanAsyncService;
 import cb.empty.music_streaming.service.NurtayAbylaikhanFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ public class NurtayAbylaikhanFileServiceImpl implements NurtayAbylaikhanFileServ
     private String uploadDir;
 
     private final NurtayAbylaikhanTrackRepository trackRepository;
+    private final NurtayAbylaikhanAsyncService asyncService;
 
     @Override
     public String uploadFile(MultipartFile file, Long trackId) {
@@ -43,6 +45,7 @@ public class NurtayAbylaikhanFileServiceImpl implements NurtayAbylaikhanFileServ
 
             track.setFilePath(filePath.toString());
             trackRepository.save(track);
+            asyncService.logFileUpload(fileName, trackId);
 
             return "File uploaded: " + fileName;
         } catch (IOException e) {

@@ -7,6 +7,7 @@ import cb.empty.music_streaming.entity.NurtayAbylaikhanUser;
 import cb.empty.music_streaming.enums.NurtayAbylaikhanRole;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanUserRepository;
 import cb.empty.music_streaming.security.jwt.NurtayAbylaikhanJwtUtil;
+import cb.empty.music_streaming.service.NurtayAbylaikhanAsyncService;
 import cb.empty.music_streaming.service.NurtayAbylaikhanAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ public class NurtayAbylaikhanAuthServiceImpl implements NurtayAbylaikhanAuthServ
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final NurtayAbylaikhanJwtUtil jwtUtil;
+    private final NurtayAbylaikhanAsyncService asyncService;
 
     @Override
     public NurtayAbylaikhanAuthResponse register(NurtayAbylaikhanRegisterRequest request) {
@@ -34,17 +36,15 @@ public class NurtayAbylaikhanAuthServiceImpl implements NurtayAbylaikhanAuthServ
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole() != null ? request.getRole() : NurtayAbylaikhanRole.USER);
         userRepository.save(user);
+        asyncService.sendWelcomeNotification(user.getUsername());
         String token = jwtUtil.generateToken(user.getUsername());
         return new NurtayAbylaikhanAuthResponse(token, user.getUsername(), user.getRole().name());
     }
 
     @Override
     public NurtayAbylaikhanAuthResponse login(NurtayAbylaikhanLoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(), request.getPassword()));
-        NurtayAbylaikhanUser user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        NurtayAbylaikhanUser user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
         String token = jwtUtil.generateToken(user.getUsername());
         return new NurtayAbylaikhanAuthResponse(token, user.getUsername(), user.getRole().name());
     }

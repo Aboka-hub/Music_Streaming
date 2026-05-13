@@ -5,6 +5,9 @@ import cb.empty.music_streaming.dto.response.NurtayAbylaikhanUserResponse;
 import cb.empty.music_streaming.service.NurtayAbylaikhanUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +41,14 @@ public class NurtayAbylaikhanUserController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/page/get")
+    public ResponseEntity<Page<NurtayAbylaikhanUserResponse>> getByUsernameContainingIgnoreCase(
+            @RequestParam(required = false) String username,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(userService.getByUsernameContainingIgnoreCase(username, pageable));
     }
 }

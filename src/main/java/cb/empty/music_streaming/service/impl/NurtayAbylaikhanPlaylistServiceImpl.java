@@ -10,6 +10,7 @@ import cb.empty.music_streaming.mapper.NurtayAbylaikhanPlaylistMapper;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanPlaylistRepository;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanTrackRepository;
 import cb.empty.music_streaming.repository.NurtayAbylaikhanUserRepository;
+import cb.empty.music_streaming.service.NurtayAbylaikhanAsyncService;
 import cb.empty.music_streaming.service.NurtayAbylaikhanPlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class NurtayAbylaikhanPlaylistServiceImpl implements NurtayAbylaikhanPlay
     private final NurtayAbylaikhanPlaylistMapper playlistMapper;
     private final NurtayAbylaikhanUserRepository userRepository;
     private final NurtayAbylaikhanTrackRepository trackRepository;
+    private final NurtayAbylaikhanAsyncService asyncService;
 
     @Override
     public NurtayAbylaikhanPlaylistResponse create(NurtayAbylaikhanPlaylistRequest request) {
@@ -31,7 +33,9 @@ public class NurtayAbylaikhanPlaylistServiceImpl implements NurtayAbylaikhanPlay
                 .orElseThrow(() -> new NurtayAbylaikhanNotFoundException("User not found"));
         NurtayAbylaikhanPlaylist playlist = playlistMapper.toEntity(request);
         playlist.setUser(user);
-        return playlistMapper.toResponse(playlistRepository.save(playlist));
+        NurtayAbylaikhanPlaylist saved = playlistRepository.save(playlist);
+        asyncService.logPlaylistCreated(saved.getName(), user.getUsername());
+        return playlistMapper.toResponse(saved);
     }
 
     @Override
