@@ -26,10 +26,8 @@ public class NurtayAbylaikhanAlbumServiceImpl implements NurtayAbylaikhanAlbumSe
 
     @Override
     public NurtayAbylaikhanAlbumResponse create(NurtayAbylaikhanAlbumRequest request) {
-        NurtayAbylaikhanArtist artist = artistRepository.findById(request.getArtistId())
-                .orElseThrow(() -> new RuntimeException("Artist not found"));
-        NurtayAbylaikhanGenre genre = genreRepository.findById(request.getGenreId())
-                .orElseThrow(() -> new RuntimeException("Genre not found"));
+        NurtayAbylaikhanArtist artist = artistRepository.findById(request.getArtistId()).orElseThrow(() -> new RuntimeException("Artist not found"));
+        NurtayAbylaikhanGenre genre = genreRepository.findById(request.getGenreId()).orElseThrow(() -> new RuntimeException("Genre not found"));
         NurtayAbylaikhanAlbum album = albumMapper.toEntity(request);
         album.setArtist(artist);
         album.setGenre(genre);
@@ -38,23 +36,18 @@ public class NurtayAbylaikhanAlbumServiceImpl implements NurtayAbylaikhanAlbumSe
 
     @Override
     public NurtayAbylaikhanAlbumResponse getById(Long id) {
-        NurtayAbylaikhanAlbum album = albumRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Album not found"));
+        NurtayAbylaikhanAlbum album = albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
         return albumMapper.toResponse(album);
     }
 
     @Override
     public List<NurtayAbylaikhanAlbumResponse> getAll() {
-        return albumRepository.findAll()
-                .stream()
-                .map(albumMapper::toResponse)
-                .toList();
+        return albumRepository.findAll().stream().map(albumMapper::toResponse).toList();
     }
 
     @Override
     public NurtayAbylaikhanAlbumResponse update(Long id, NurtayAbylaikhanAlbumRequest request) {
-        NurtayAbylaikhanAlbum album = albumRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Album not found"));
+        NurtayAbylaikhanAlbum album = albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
         album.setTitle(request.getTitle());
         album.setReleaseDate(request.getReleaseDate());
         return albumMapper.toResponse(albumRepository.save(album));
