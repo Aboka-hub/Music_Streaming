@@ -38,7 +38,7 @@ public class NurtayAbylaikhanUser {
     @Column(unique = true, nullable = false)
     private LocalDateTime createdAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private NurtayAbylaikhanArtist artist;
 
     @OneToMany(fetch = FetchType.LAZY)
