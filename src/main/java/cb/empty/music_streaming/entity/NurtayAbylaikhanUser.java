@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +36,7 @@ public class NurtayAbylaikhanUser {
     @Enumerated(EnumType.STRING)
     private NurtayAbylaikhanRole role;
 
+    @CreationTimestamp
     @Column(unique = true, nullable = false)
     private LocalDateTime createdAt;
 
