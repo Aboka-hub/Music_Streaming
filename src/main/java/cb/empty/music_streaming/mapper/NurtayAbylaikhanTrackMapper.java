@@ -13,6 +13,7 @@ public class NurtayAbylaikhanTrackMapper {
         response.setId(track.getId());
         response.setTitle(track.getTitle());
         response.setDuration(track.getDuration());
+        response.setAlbumTitle(track.getAlbum().getTitle());
         response.setFilePath(track.getFilePath());
         response.setCreatedAt(track.getCreatedAt());
         return response;

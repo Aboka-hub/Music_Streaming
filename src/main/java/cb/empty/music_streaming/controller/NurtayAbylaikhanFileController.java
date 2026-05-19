@@ -4,6 +4,7 @@ import cb.empty.music_streaming.service.NurtayAbylaikhanFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +16,7 @@ public class NurtayAbylaikhanFileController {
 
     private final NurtayAbylaikhanFileService fileService;
 
-    @PostMapping("/{id}/upload")
+    @PostMapping(value = "/{id}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> upload(
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file) {
